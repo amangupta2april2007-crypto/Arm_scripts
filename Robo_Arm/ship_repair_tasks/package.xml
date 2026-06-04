@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!--
+  ┌──────────────────────────────────────────────────────────┐
+  │  ship_repair_tasks – ROS 2 package manifest              │
+  │                                                          │
+  │  Purpose:                                                │
+  │  Declares runtime dependencies so that `colcon build`    │
+  │  and `rosdep install` can resolve everything the Python  │
+  │  nodes need at build-time and execution-time.            │
+  │                                                          │
+  │  Key dependencies:                                       │
+  │  • rclpy           – ROS 2 Python client library         │
+  │  • moveit_commander – High-level MoveIt Python API       │
+  │  • sensor_msgs     – Image message type for cameras      │
+  │  • std_msgs        – Primitive message types              │
+  │  • geometry_msgs   – Pose / Point / Quaternion msgs      │
+  │  • trajectory_msgs – JointTrajectory for controllers     │
+  │  • action_msgs     – Action infrastructure               │
+  │  • cv_bridge       – OpenCV ↔ ROS Image conversion       │
+  └──────────────────────────────────────────────────────────┘
+-->
+<package format="3">
+  <name>ship_repair_tasks</name>
+  <version>1.0.0</version>
+  <description>
+    Ship repair mission tasks for robotic arm: oil leak detection,
+    tool delivery, pipe repair, valve operation, and photo documentation.
+  </description>
+  <maintainer email="aman@todo.todo">Aman Gupta</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Core ROS 2 Python -->
+  <exec_depend>rclpy</exec_depend>
+
+  <!-- MoveIt 2 Python bindings for motion planning -->
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
+
+  <!-- Message types used across the task nodes -->
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>trajectory_msgs</exec_depend>
+  <exec_depend>action_msgs</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+
+  <!-- OpenCV bridge for camera image processing -->
+  <exec_depend>cv_bridge</exec_depend>
+
+  <!-- The arm package (provides URDF and controllers) -->
+  <exec_depend>my_robotic_arm</exec_depend>
+  <exec_depend>my_robotic_arm_moveit_config</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,129 @@
+###############################################################################
+# Ship Repair Mission Configuration
+# ──────────────────────────────────
+# All waypoints are in metres, relative to the 'world' frame.
+# Joint angles are in radians.
+#
+# This YAML is loaded by every task node so that waypoints can be tuned
+# WITHOUT recompiling any code — just edit this file and re-launch.
+###############################################################################
+
+# ── Planning parameters ─────────────────────────────────────────────────────
+planning:
+  arm_group_name: "arm_group"           # MoveIt planning group for 6-DOF arm
+  gripper_group_name: "gripper"         # MoveIt planning group for gripper
+  max_velocity_scaling: 0.5             # fraction of joint velocity limits
+  max_acceleration_scaling: 0.5         # fraction of joint acceleration limits
+  planning_time: 10.0                   # seconds allowed for OMPL planning
+  num_planning_attempts: 5              # retry count on plan failure
+  goal_position_tolerance: 0.01         # metres
+  goal_orientation_tolerance: 0.01      # radians
+  goal_joint_tolerance: 0.01            # radians
+
+# ── Gripper positions ───────────────────────────────────────────────────────
+gripper:
+  open:
+    Finger_1: 0.035                     # fully open (metres, prismatic)
+    Finger_2: -0.035
+  closed:
+    Finger_1: 0.005                     # gripping position
+    Finger_2: -0.005
+  release:
+    Finger_1: 0.020                     # partially open for tool release
+    Finger_2: -0.020
+
+# ── Named joint configurations (radians) ────────────────────────────────────
+named_poses:
+  home:
+    Joint_1: 0.0
+    Joint_2: 0.0
+    Joint_3: 0.0
+    Joint_4: 0.0
+    Joint_5: 0.0
+    Joint_6: 0.0
+
+  tool_pickup:
+    Joint_1: 0.785                      # 45° toward tool rack
+    Joint_2: -0.35
+    Joint_3: 0.50
+    Joint_4: 0.0
+    Joint_5: 0.80
+    Joint_6: 0.0
+
+  inspect_ready:
+    Joint_1: 1.1734
+    Joint_2: -0.0781
+    Joint_3: 0.4586
+    Joint_4: -0.5079
+    Joint_5: 0.2388
+    Joint_6: 2.8197
+
+  repair_approach:
+    Joint_1: 1.30
+    Joint_2: -0.30
+    Joint_3: 0.45
+    Joint_4: -0.20
+    Joint_5: 0.50
+    Joint_6: 1.57
+
+  camera_position:
+    Joint_1: 1.00
+    Joint_2: -0.20
+    Joint_3: 0.30
+    Joint_4: 0.0
+    Joint_5: 1.20
+    Joint_6: 0.0
+
+  pipe_attach:
+    Joint_1: 1.40
+    Joint_2: -0.25
+    Joint_3: 0.40
+    Joint_4: 0.30
+    Joint_5: 0.60
+    Joint_6: 1.00
+
+  valve_operate:
+    Joint_1: 0.50
+    Joint_2: -0.40
+    Joint_3: 0.35
+    Joint_4: 1.57
+    Joint_5: 0.40
+    Joint_6: 0.0
+
+  tool_stow:
+    Joint_1: 0.785
+    Joint_2: -0.30
+    Joint_3: 0.45
+    Joint_4: 0.0
+    Joint_5: 0.70
+    Joint_6: 0.0
+
+# ── Cartesian waypoints (x, y, z in metres; roll, pitch, yaw in radians) ───
+# Used for linear tool-path motions where straight-line end-effector
+# trajectories are required (e.g. sealing a pipe along its length).
+cartesian_paths:
+  seal_pipe:
+    - {x: 0.40, y: 0.20, z: 0.30, roll: 0.0, pitch: 1.57, yaw: 0.0}
+    - {x: 0.40, y: 0.22, z: 0.30, roll: 0.0, pitch: 1.57, yaw: 0.0}
+    - {x: 0.40, y: 0.24, z: 0.30, roll: 0.0, pitch: 1.57, yaw: 0.0}
+    - {x: 0.40, y: 0.26, z: 0.30, roll: 0.0, pitch: 1.57, yaw: 0.0}
+
+  valve_rotation:
+    - {x: 0.35, y: 0.10, z: 0.25, roll: 0.0, pitch: 0.0, yaw: 0.0}
+    - {x: 0.35, y: 0.10, z: 0.25, roll: 0.0, pitch: 0.0, yaw: 0.785}
+    - {x: 0.35, y: 0.10, z: 0.25, roll: 0.0, pitch: 0.0, yaw: 1.57}
+
+# ── Oil leak detection thresholds ───────────────────────────────────────────
+oil_leak_detection:
+  # HSV colour range for dark oil stains (tuned for simulation)
+  hsv_lower: [0, 0, 0]                 # H, S, V lower bounds
+  hsv_upper: [180, 255, 50]            # H, S, V upper bounds
+  min_contour_area: 500                # pixels²  – ignore small noise
+  camera_topic: "/camera_link_gripper_left/image_raw"
+  detection_confidence: 0.75           # fraction of positive frames needed
+
+# ── Mission timing ──────────────────────────────────────────────────────────
+timing:
+  inter_task_pause: 2.0                # seconds between tasks
+  gripper_settle_time: 1.0             # seconds to wait after gripper command
+  photo_capture_delay: 0.5             # seconds to wait before snapping photo
